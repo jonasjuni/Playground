@@ -2,17 +2,24 @@
 //:
 //: You represent errors using any type that adopts the `Error` protocol.
 //:
+
+import Foundation
 enum PrinterError: Error {
     case outOfPaper
     case noToner
     case onFire
 }
 
+enum NetworkError:Int, Error {
+    case notFound = 404
+}
 //: Use `throw` to throw an error and `throws` to mark a function that can throw an error. If you throw an error in a function, the function returns immediately and the code that called the function handles the error.
 //:
 func send(job: Int, toPrinter printerName: String) throws -> String {
     if printerName == "Never Has Toner" {
         throw PrinterError.noToner
+    } else if printerName == "wifi" {
+        throw NetworkError.notFound
     }
     return "Job sent"
 }
@@ -20,7 +27,7 @@ func send(job: Int, toPrinter printerName: String) throws -> String {
 //: There are several ways to handle errors. One way is to use `do`-`catch`. Inside the `do` block, you mark code that can throw an error by writing `try` in front of it. Inside the `catch` block, the error is automatically given the name `error` unless you give it a different name.
 //:
 do {
-    let printerResponse = try send(job: 1040, toPrinter: "Bi Sheng")
+    let printerResponse = try send(job: 1040, toPrinter: "Never Has Toner")
     print(printerResponse)
 } catch {
     print(error)
@@ -32,8 +39,9 @@ do {
 //: You can provide multiple `catch` blocks that handle specific errors. You write a pattern after `catch` just as you do after `case` in a switch.
 //:
 do {
-    let printerResponse = try send(job: 1440, toPrinter: "Gutenberg")
+    let printerResponse = try send(job: 1440, toPrinter: "wifi")
     print(printerResponse)
+    throw PrinterError.onFire
 } catch PrinterError.onFire {
     print("I'll just put this over here, with the rest of the fire.")
 } catch let printerError as PrinterError {

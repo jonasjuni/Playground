@@ -2,6 +2,8 @@
 //:
 //: Use `async` to mark a function that runs asynchronously.
 //:
+import _Concurrency
+
 func fetchUserID(from server: String) async -> Int {
     if server == "primary" {
         return 97
@@ -21,19 +23,19 @@ func fetchUsername(from server: String) async -> String {
 
 //: Use `async let` to call an asynchronous function, letting it run in parallel with other asynchronous code. When you use the value it returns, write `await`.
 //:
+// async let doesn't work on Playground
 func connectUser(to server: String) async {
-    async let userID = fetchUserID(from: server)
-    async let username = fetchUsername(from: server)
-    let greeting = await "Hello \(username), user ID \(userID)"
+    let userID = await fetchUserID(from: server)
+    let username = await fetchUsername(from: server)
+    let greeting = "Hello \(username), user ID \(userID)"
     print(greeting)
 }
 
 //: Use `Task` to call asynchronous functions from synchronous code, without waiting for them to return.
 //:
-Task {
+Task{
     await connectUser(to: "primary")
 }
-
 
 
 //: [Previous](@previous) | [Next](@next)

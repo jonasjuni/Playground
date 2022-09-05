@@ -140,4 +140,11 @@ func createDeck() -> [Card]{
 }
 
 let deck = createDeck()
+
+enum Weather: String {
+    case rain = "Test"
+    case clear, fog, snow
+}
+
+let weather = Weather.snow.rawValue
 //: [Previous](@previous) | [Next](@next)
